@@ -199,13 +199,10 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 			return;
 		}
 
-		// Remove the party token from the scene if present
-		const partyToken = canvas.scene.tokens.find(
+		// Find the party token to remove after placement
+		const partyTokenId = canvas.scene.tokens.find(
 			t => t.actorId === this.actor.id
-		);
-		if (partyToken) {
-			await partyToken.delete();
-		}
+		)?.id;
 
 		// Close the sheet before starting placement
 		await this.close();
@@ -228,5 +225,11 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 				}
 			},
 		});
+
+		// Remove the party token after all members have been placed
+		if (partyTokenId) {
+			const token = canvas.scene.tokens.get(partyTokenId);
+			if (token) await token.delete();
+		}
 	}
 }
