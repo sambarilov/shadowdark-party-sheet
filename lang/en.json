@@ -1,0 +1,37 @@
+{
+  "TYPES": {
+    "Actor": {
+      "shadowdark-party-token": {
+        "party": "Party"
+      }
+    }
+  },
+  "PARTY": {
+    "sheet": {
+      "name": "Party Name",
+      "dropHint": "Drag & drop characters or NPCs here to add them to the party.",
+      "characters": "Characters",
+      "followers": "Followers"
+    },
+    "column": {
+      "name": "Name",
+      "ancestry": "Ancestry",
+      "class": "Class",
+      "level": "Lvl",
+      "slots": "Slots",
+      "actions": ""
+    },
+    "actions": {
+      "toggleRole": "Toggle Character / Follower",
+      "remove": "Remove from Party"
+    },
+    "member": {
+      "missing": "Missing Actor",
+      "npc": "NPC"
+    },
+    "warnings": {
+      "invalidType": "Only Player characters and NPCs can be added to a party.",
+      "duplicate": "This actor is already in the party."
+    }
+  }
+}

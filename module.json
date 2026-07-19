@@ -1,0 +1,36 @@
+{
+  "id": "shadowdark-party-token",
+  "title": "Shadowdark Party Token",
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Sambarilov",
+      "email": "vitorhp2@gmail.com",
+      "discord": "Sambarilov",
+      "flags": {}
+    }
+  ],
+  "system": ["shadowdark"],
+  "esmodules": ["scripts/party.mjs"],
+  "styles": ["styles/party-sheet.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "party": {}
+    }
+  },
+  "flags": {
+    "canUpload": true
+  },
+  "description": "Adds a Party actor type for managing groups of characters and followers in Shadowdark RPG."
+}
