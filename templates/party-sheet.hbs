@@ -23,14 +23,27 @@
     </div>
   </header>
 
+  {{!-- Navigation --}}
+  <nav class="SD-nav flex0" data-group="primary">
+    <a class="navigation-tab active" data-tab="tab-members">
+      {{localize "PARTY.tab.members"}}
+    </a>
+    <a class="navigation-tab" data-tab="tab-inventory">
+      {{localize "PARTY.tab.inventory"}}
+    </a>
+  </nav>
+
   {{!-- Content --}}
   <section class="SD-content-body flex1">
 
-    {{#if isEmpty}}
-    <div class="party-empty-hint">
-      <p><i class="fas fa-users"></i> {{localize "PARTY.sheet.dropHint"}}</p>
-    </div>
-    {{/if}}
+    {{!-- Members Tab --}}
+    <section class="tab tab-members" data-group="primary" data-tab="tab-members">
+
+      {{#if isEmpty}}
+      <div class="party-empty-hint">
+        <p><i class="fas fa-users"></i> {{localize "PARTY.sheet.dropHint"}}</p>
+      </div>
+      {{/if}}
 
     {{!-- Characters Section --}}
     {{#if characters.length}}
@@ -41,7 +54,7 @@
       </div>
       <div class="content">
         <ul class="SD-list">
-          <li class="header">
+          <li class="list-header">
             <span class="member-img-col"></span>
             <span class="item-name">{{localize "PARTY.column.name"}}</span>
             <span class="member-field">{{localize "PARTY.column.ancestry"}}</span>
@@ -95,7 +108,7 @@
       </div>
       <div class="content">
         <ul class="SD-list">
-          <li class="header">
+          <li class="list-header">
             <span class="member-img-col"></span>
             <span class="item-name">{{localize "PARTY.column.name"}}</span>
             <span class="member-field">{{localize "PARTY.column.ancestry"}}</span>
@@ -139,6 +152,50 @@
       </div>
     </div>
     {{/if}}
+
+    </section>
+
+    {{!-- Inventory Tab --}}
+    <section class="tab tab-inventory" data-group="primary" data-tab="tab-inventory">
+
+      {{#unless hasInventory}}
+      <div class="party-empty-hint">
+        <p><i class="fas fa-box-open"></i> {{localize "PARTY.inventory.empty"}}</p>
+      </div>
+      {{/unless}}
+
+      {{#each inventoryGroups}}
+      <div class="SD-box party-box">
+        <div class="header">
+          <label>{{this.label}}</label>
+          <span></span>
+        </div>
+        <div class="content">
+          <ul class="SD-list">
+            <li class="list-header">
+              <span class="inv-img-col"></span>
+              <span class="item-name">{{localize "PARTY.column.name"}}</span>
+              <span class="inv-owners">{{localize "PARTY.column.carriedBy"}}</span>
+              <span class="inv-qty">{{localize "PARTY.column.qty"}}</span>
+            </li>
+            {{#each this.items}}
+            <li>
+              <span class="inv-img-col">
+                <img src="{{this.img}}" class="member-img" />
+              </span>
+              <span class="item-name">{{this.name}}</span>
+              <span class="inv-owners">
+                {{#each this.owners}}{{#unless @first}}, {{/unless}}{{this.name}} ({{this.quantity}}){{/each}}
+              </span>
+              <span class="inv-qty">{{this.totalQuantity}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+      {{/each}}
+
+    </section>
 
   </section>
 

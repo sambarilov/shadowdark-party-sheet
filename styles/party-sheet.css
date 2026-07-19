@@ -55,7 +55,17 @@
   margin-bottom: 8px;
 }
 
-.shadowdark.sheet.party .party-box .header label i {
+.shadowdark.sheet.party .party-box > .header label {
+  background: none;
+  color: black;
+  font-weight: bold;
+}
+
+.shadowdark.sheet.party .party-box > .header span {
+  background: none;
+}
+
+.shadowdark.sheet.party .party-box > .header label i {
   margin-right: 4px;
 }
 
@@ -123,4 +133,34 @@
 
 .shadowdark.sheet.party .member-actions a[data-action="remove-member"]:hover {
   color: #c00;
+}
+
+/* ---------------------------------------- */
+/*  Inventory Tab                            */
+/* ---------------------------------------- */
+
+.shadowdark.sheet.party .SD-list > li.list-header {
+  font-family: "Montserrat-Bold", sans-serif;
+  color: black;
+  font-size: 12px;
+  border-bottom: 1px solid black;
+}
+
+.shadowdark.sheet.party .inv-img-col {
+  flex: 0 0 28px;
+  text-align: center;
+}
+
+.shadowdark.sheet.party .inv-qty {
+  flex: 0 0 40px;
+  text-align: center;
+}
+
+.shadowdark.sheet.party .inv-owners {
+  flex: 1 1 auto;
+  font-size: 12px;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

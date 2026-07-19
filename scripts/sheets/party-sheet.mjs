@@ -4,9 +4,16 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["shadowdark", "sheet", "party"],
 			width: 700,
-			height: 500,
+			height: 550,
 			resizable: true,
 			dragDrop: [{ dropSelector: null }],
+			tabs: [
+				{
+					navSelector: ".SD-nav",
+					contentSelector: ".SD-content-body",
+					initial: "tab-members",
+				},
+			],
 		});
 	}
 
@@ -24,6 +31,21 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		context.followers = resolved.filter(m => m.role === "follower");
 		context.isEmpty = resolved.length === 0;
 		context.editable = this.isEditable;
+
+		// Inventory tab data
+		const inventory = await this.actor.system.resolveInventory();
+		const grouped = {};
+		for (const item of inventory) {
+			const typeLabel = CONFIG.Item?.typeLabels?.[item.type]
+				? game.i18n.localize(CONFIG.Item.typeLabels[item.type])
+				: item.type;
+			if (!grouped[typeLabel]) grouped[typeLabel] = [];
+			grouped[typeLabel].push(item);
+		}
+		context.inventoryGroups = Object.entries(grouped).map(
+			([label, items]) => ({ label, items })
+		);
+		context.hasInventory = inventory.length > 0;
 
 		return context;
 	}

@@ -80,4 +80,52 @@ export default class PartyDataModel extends foundry.abstract.TypeDataModel {
 	hasMember(uuid) {
 		return this.members.some(m => m.uuid === uuid);
 	}
+
+	/**
+	 * Build a consolidated inventory across all party members.
+	 * Items are grouped by name+type, with per-member quantities tracked.
+	 * @returns {Promise<object[]>} Sorted array of grouped item entries.
+	 */
+	async resolveInventory() {
+		const itemMap = new Map();
+
+		for (const member of this.members) {
+			const actor = await fromUuid(member.uuid);
+			if (!actor) continue;
+
+			for (const item of actor.items) {
+				if (!item.system.isPhysical) continue;
+
+				const key = `${item.name}:::${item.type}`;
+				if (!itemMap.has(key)) {
+					itemMap.set(key, {
+						name: item.name,
+						img: item.img,
+						type: item.type,
+						totalQuantity: 0,
+						owners: [],
+					});
+				}
+
+				const entry = itemMap.get(key);
+				const qty = item.system.quantity ?? 1;
+				entry.totalQuantity += qty;
+
+				const existing = entry.owners.find(o => o.name === actor.name);
+				if (existing) {
+					existing.quantity += qty;
+				} else {
+					entry.owners.push({
+						name: actor.name,
+						quantity: qty,
+					});
+				}
+			}
+		}
+
+		return [...itemMap.values()].sort((a, b) => {
+			if (a.type !== b.type) return a.type.localeCompare(b.type);
+			return a.name.localeCompare(b.name);
+		});
+	}
 }

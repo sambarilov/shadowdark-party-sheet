@@ -7,6 +7,10 @@
     }
   },
   "PARTY": {
+    "tab": {
+      "members": "Members",
+      "inventory": "Inventory"
+    },
     "sheet": {
       "name": "Party Name",
       "dropHint": "Drag & drop characters or NPCs here to add them to the party.",
@@ -19,7 +23,12 @@
       "class": "Class",
       "level": "Lvl",
       "slots": "Slots",
-      "actions": ""
+      "actions": "",
+      "qty": "Total",
+      "carriedBy": "Carried By"
+    },
+    "inventory": {
+      "empty": "No items — add members with gear to see party inventory."
     },
     "actions": {
       "toggleRole": "Toggle Character / Follower",
