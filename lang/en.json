@@ -14,7 +14,7 @@
     "sheet": {
       "name": "Party Name",
       "dropHint": "Drag & drop characters or NPCs here to add them to the party.",
-      "characters": "Characters",
+      "characters": "Adventurers",
       "followers": "Followers"
     },
     "column": {
