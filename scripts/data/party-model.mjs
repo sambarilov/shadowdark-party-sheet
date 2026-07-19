@@ -128,4 +128,34 @@ export default class PartyDataModel extends foundry.abstract.TypeDataModel {
 			return a.name.localeCompare(b.name);
 		});
 	}
+
+	/**
+	 * Find the best (brightest) active light source across all party members.
+	 * @param {object} lightSourceMap  Cached light source templates from the system JSON.
+	 * @returns {Promise<object|null>} The light config object, or null if none active.
+	 */
+	async resolveBestLight(lightSourceMap) {
+		let bestLight = null;
+		let bestBright = -1;
+
+		for (const member of this.members) {
+			const actor = await fromUuid(member.uuid);
+			if (!actor) continue;
+
+			for (const item of actor.items) {
+				if (!item.system.light?.isSource || !item.system.light?.active) continue;
+
+				const template = item.system.light.template;
+				const entry = lightSourceMap[template];
+				if (!entry?.light) continue;
+
+				if (entry.light.bright > bestBright) {
+					bestBright = entry.light.bright;
+					bestLight = entry.light;
+				}
+			}
+		}
+
+		return bestLight;
+	}
 }
