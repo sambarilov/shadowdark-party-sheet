@@ -67,6 +67,10 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		html.find("[data-action='open-sheet']").click(
 			event => this._onOpenSheet(event)
 		);
+
+		html.find("[data-action='place-tokens']").click(
+			event => this._onPlaceTokens(event)
+		);
 	}
 
 	/** @inheritdoc */
@@ -146,5 +150,83 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		const uuid = event.currentTarget.closest("[data-uuid]").dataset.uuid;
 		const actor = await fromUuid(uuid);
 		actor?.sheet?.render(true);
+	}
+
+	/**
+	 * Place tokens for party members on the current scene interactively.
+	 * @param {Event} event
+	 */
+	async _onPlaceTokens(event) {
+		event.preventDefault();
+
+		if (!canvas.scene) {
+			ui.notifications.warn(game.i18n.localize("PARTY.warnings.noScene"));
+			return;
+		}
+
+		const includeFollowers = this.element.find(
+			"[data-action='toggle-place-followers']"
+		).is(":checked");
+
+		const members = this.actor.system.members.filter(
+			m => m.role === "character" || includeFollowers
+		);
+
+		if (!members.length) {
+			ui.notifications.warn(game.i18n.localize("PARTY.warnings.noMembers"));
+			return;
+		}
+
+		// Build token data, skipping actors that already have linked tokens
+		const tokenData = [];
+		const actorNames = [];
+		for (const member of members) {
+			const actor = await fromUuid(member.uuid);
+			if (!actor) continue;
+
+			const existing = canvas.scene.tokens.find(
+				t => t.actorId === actor.id && t.actorLink
+			);
+			if (existing) continue;
+
+			const td = await actor.getTokenDocument({}, { parent: canvas.scene });
+			tokenData.push(td.toObject());
+			actorNames.push(actor.name);
+		}
+
+		if (!tokenData.length) {
+			ui.notifications.info(game.i18n.localize("PARTY.warnings.allPlaced"));
+			return;
+		}
+
+		// Remove the party token from the scene if present
+		const partyToken = canvas.scene.tokens.find(
+			t => t.actorId === this.actor.id
+		);
+		if (partyToken) {
+			await partyToken.delete();
+		}
+
+		// Close the sheet before starting placement
+		await this.close();
+
+		// Place tokens one by one using the canvas placement workflow
+		let placementIndex = 0;
+		ui.notifications.info(
+			game.i18n.format("PARTY.info.placeNext", { name: actorNames[0] })
+		);
+
+		await canvas.tokens.placeTokens(tokenData, {
+			onMove: ({ index }) => {
+				if (index !== placementIndex) {
+					placementIndex = index;
+					if (index < actorNames.length) {
+						ui.notifications.info(
+							game.i18n.format("PARTY.info.placeNext", { name: actorNames[index] })
+						);
+					}
+				}
+			},
+		});
 	}
 }

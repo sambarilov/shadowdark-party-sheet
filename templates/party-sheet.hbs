@@ -39,6 +39,18 @@
     {{!-- Members Tab --}}
     <section class="tab tab-members" data-group="primary" data-tab="tab-members">
 
+      {{#unless isEmpty}}
+      <div class="party-toolbar">
+        <label class="party-checkbox">
+          <input type="checkbox" data-action="toggle-place-followers" />
+          {{localize "PARTY.actions.placeFollowers"}}
+        </label>
+        <button type="button" data-action="place-tokens">
+          <i class="fas fa-map-marker-alt"></i> {{localize "PARTY.actions.placeTokens"}}
+        </button>
+      </div>
+      {{/unless}}
+
       {{#if isEmpty}}
       <div class="party-empty-hint">
         <p><i class="fas fa-users"></i> {{localize "PARTY.sheet.dropHint"}}</p>

@@ -48,6 +48,35 @@
 }
 
 /* ---------------------------------------- */
+/*  Toolbar                                  */
+/* ---------------------------------------- */
+
+.shadowdark.sheet.party .party-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.shadowdark.sheet.party .party-toolbar button {
+  flex: 0 0 auto;
+}
+
+.shadowdark.sheet.party .party-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.shadowdark.sheet.party .party-checkbox input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+/* ---------------------------------------- */
 /*  Party Box (SD-box variant)               */
 /* ---------------------------------------- */
 

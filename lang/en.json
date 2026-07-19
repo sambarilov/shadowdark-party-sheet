@@ -32,7 +32,9 @@
     },
     "actions": {
       "toggleRole": "Toggle Character / Follower",
-      "remove": "Remove from Party"
+      "remove": "Remove from Party",
+      "placeTokens": "Place on Map",
+      "placeFollowers": "Include Followers"
     },
     "member": {
       "missing": "Missing Actor",
@@ -40,7 +42,14 @@
     },
     "warnings": {
       "invalidType": "Only Player characters and NPCs can be added to a party.",
-      "duplicate": "This actor is already in the party."
+      "duplicate": "This actor is already in the party.",
+      "noScene": "No active scene to place tokens on.",
+      "noMembers": "No members to place.",
+      "allPlaced": "All members already have tokens on this scene."
+    },
+    "info": {
+      "tokensPlaced": "{count} token(s) placed on the scene.",
+      "placeNext": "Choose where to place {name}"
     }
   }
 }
