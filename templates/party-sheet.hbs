@@ -1,15 +1,30 @@
-<form class="party-sheet flexcol" autocomplete="off">
+<form class="{{cssClass}} flexcol" autocomplete="off">
 
-  {{!-- Header --}}
-  <header class="party-header flexrow">
-    <img src="{{actor.img}}" class="party-portrait" title="{{actor.name}}" />
-    <div class="party-header-info flexcol">
-      <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'PARTY.sheet.name'}}" {{#unless editable}}disabled{{/unless}} />
+  {{!-- Header: matches SD-header pattern --}}
+  <header class="SD-header flex0">
+    <img
+      class="portrait"
+      src="{{actor.img}}"
+      data-edit="img"
+      data-tooltip="{{actor.name}}"
+      height="110"
+      width="110"
+    />
+    <div class="shadowdark-logo">
+      <span>ShadowDark</span>
+    </div>
+    <div class="SD-title">
+      <input
+        name="name"
+        type="text"
+        value="{{actor.name}}"
+        placeholder="{{localize 'PARTY.sheet.name'}}"
+      />
     </div>
   </header>
 
-  {{!-- Drop Zone --}}
-  <section class="party-drop-zone">
+  {{!-- Content --}}
+  <section class="SD-content-body flex1">
 
     {{#if isEmpty}}
     <div class="party-empty-hint">
@@ -19,103 +34,109 @@
 
     {{!-- Characters Section --}}
     {{#if characters.length}}
-    <div class="party-section">
-      <h2 class="party-section-header">
-        <i class="fas fa-shield-alt"></i> {{localize "PARTY.sheet.characters"}}
-      </h2>
-      <table class="party-member-table">
-        <thead>
-          <tr>
-            <th class="col-img"></th>
-            <th class="col-name">{{localize "PARTY.column.name"}}</th>
-            <th class="col-ancestry">{{localize "PARTY.column.ancestry"}}</th>
-            <th class="col-class">{{localize "PARTY.column.class"}}</th>
-            <th class="col-level">{{localize "PARTY.column.level"}}</th>
-            <th class="col-slots">{{localize "PARTY.column.slots"}}</th>
-            {{#if editable}}<th class="col-actions">{{localize "PARTY.column.actions"}}</th>{{/if}}
-          </tr>
-        </thead>
-        <tbody>
+    <div class="SD-box party-box">
+      <div class="header">
+        <label><i class="fas fa-shield-alt"></i> {{localize "PARTY.sheet.characters"}}</label>
+        <span></span>
+      </div>
+      <div class="content">
+        <ul class="SD-list">
+          <li class="header">
+            <span class="member-img-col"></span>
+            <span class="item-name">{{localize "PARTY.column.name"}}</span>
+            <span class="member-field">{{localize "PARTY.column.ancestry"}}</span>
+            <span class="member-field">{{localize "PARTY.column.class"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.level"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.slots"}}</span>
+            {{#if editable}}<span class="member-actions"></span>{{/if}}
+          </li>
           {{#each characters}}
-          <tr class="party-member-row {{#if this.missing}}missing{{/if}}" data-uuid="{{this.uuid}}">
+          <li data-uuid="{{this.uuid}}" class="{{#if this.missing}}missing{{/if}}">
             {{#if this.missing}}
-              <td class="col-img"><i class="fas fa-exclamation-triangle"></i></td>
-              <td class="col-name" colspan="5">{{this.name}}</td>
+              <span class="member-img-col"><i class="fas fa-exclamation-triangle"></i></span>
+              <span class="item-name">{{this.name}}</span>
             {{else}}
-              <td class="col-img"><img src="{{this.img}}" class="member-img" /></td>
-              <td class="col-name"><a data-action="open-sheet">{{this.name}}</a></td>
-              <td class="col-ancestry">{{this.ancestry}}</td>
-              <td class="col-class">{{this.className}}</td>
-              <td class="col-level">{{this.level}}</td>
-              <td class="col-slots">
+              <span class="member-img-col">
+                <img src="{{this.img}}" class="member-img" />
+              </span>
+              <span class="item-name">
+                <a data-action="open-sheet">{{this.name}}</a>
+              </span>
+              <span class="member-field">{{this.ancestry}}</span>
+              <span class="member-field">{{this.className}}</span>
+              <span class="member-stat">{{this.level}}</span>
+              <span class="member-stat">
                 {{#if this.isPlayer}}
-                  {{this.slotsUsed}} / {{this.slotsTotal}}
+                  {{this.slotsUsed}}/{{this.slotsTotal}}
                 {{else}}
                   —
                 {{/if}}
-              </td>
+              </span>
             {{/if}}
             {{#if @root.editable}}
-            <td class="col-actions">
+            <span class="member-actions">
               <a data-action="toggle-role" title="{{localize 'PARTY.actions.toggleRole'}}"><i class="fas fa-exchange-alt"></i></a>
               <a data-action="remove-member" title="{{localize 'PARTY.actions.remove'}}"><i class="fas fa-trash"></i></a>
-            </td>
+            </span>
             {{/if}}
-          </tr>
+          </li>
           {{/each}}
-        </tbody>
-      </table>
+        </ul>
+      </div>
     </div>
     {{/if}}
 
     {{!-- Followers Section --}}
     {{#if followers.length}}
-    <div class="party-section">
-      <h2 class="party-section-header">
-        <i class="fas fa-hiking"></i> {{localize "PARTY.sheet.followers"}}
-      </h2>
-      <table class="party-member-table">
-        <thead>
-          <tr>
-            <th class="col-img"></th>
-            <th class="col-name">{{localize "PARTY.column.name"}}</th>
-            <th class="col-ancestry">{{localize "PARTY.column.ancestry"}}</th>
-            <th class="col-class">{{localize "PARTY.column.class"}}</th>
-            <th class="col-level">{{localize "PARTY.column.level"}}</th>
-            <th class="col-slots">{{localize "PARTY.column.slots"}}</th>
-            {{#if editable}}<th class="col-actions">{{localize "PARTY.column.actions"}}</th>{{/if}}
-          </tr>
-        </thead>
-        <tbody>
+    <div class="SD-box party-box">
+      <div class="header">
+        <label><i class="fas fa-hiking"></i> {{localize "PARTY.sheet.followers"}}</label>
+        <span></span>
+      </div>
+      <div class="content">
+        <ul class="SD-list">
+          <li class="header">
+            <span class="member-img-col"></span>
+            <span class="item-name">{{localize "PARTY.column.name"}}</span>
+            <span class="member-field">{{localize "PARTY.column.ancestry"}}</span>
+            <span class="member-field">{{localize "PARTY.column.class"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.level"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.slots"}}</span>
+            {{#if editable}}<span class="member-actions"></span>{{/if}}
+          </li>
           {{#each followers}}
-          <tr class="party-member-row {{#if this.missing}}missing{{/if}}" data-uuid="{{this.uuid}}">
+          <li data-uuid="{{this.uuid}}" class="{{#if this.missing}}missing{{/if}}">
             {{#if this.missing}}
-              <td class="col-img"><i class="fas fa-exclamation-triangle"></i></td>
-              <td class="col-name" colspan="5">{{this.name}}</td>
+              <span class="member-img-col"><i class="fas fa-exclamation-triangle"></i></span>
+              <span class="item-name">{{this.name}}</span>
             {{else}}
-              <td class="col-img"><img src="{{this.img}}" class="member-img" /></td>
-              <td class="col-name"><a data-action="open-sheet">{{this.name}}</a></td>
-              <td class="col-ancestry">{{this.ancestry}}</td>
-              <td class="col-class">{{this.className}}</td>
-              <td class="col-level">{{this.level}}</td>
-              <td class="col-slots">
+              <span class="member-img-col">
+                <img src="{{this.img}}" class="member-img" />
+              </span>
+              <span class="item-name">
+                <a data-action="open-sheet">{{this.name}}</a>
+              </span>
+              <span class="member-field">{{this.ancestry}}</span>
+              <span class="member-field">{{this.className}}</span>
+              <span class="member-stat">{{this.level}}</span>
+              <span class="member-stat">
                 {{#if this.isPlayer}}
-                  {{this.slotsUsed}} / {{this.slotsTotal}}
+                  {{this.slotsUsed}}/{{this.slotsTotal}}
                 {{else}}
                   —
                 {{/if}}
-              </td>
+              </span>
             {{/if}}
             {{#if @root.editable}}
-            <td class="col-actions">
+            <span class="member-actions">
               <a data-action="toggle-role" title="{{localize 'PARTY.actions.toggleRole'}}"><i class="fas fa-exchange-alt"></i></a>
               <a data-action="remove-member" title="{{localize 'PARTY.actions.remove'}}"><i class="fas fa-trash"></i></a>
-            </td>
+            </span>
             {{/if}}
-          </tr>
+          </li>
           {{/each}}
-        </tbody>
-      </table>
+        </ul>
+      </div>
     </div>
     {{/if}}
 
