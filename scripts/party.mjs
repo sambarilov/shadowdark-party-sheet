@@ -53,6 +53,9 @@ async function syncPartyLight(partyActor) {
 	);
 	if (!token) return;
 
+	// Only sync light if tracking is enabled for this token
+	if (!token.getFlag(MODULE_ID, "trackLight")) return;
+
 	const bestLight = await partyActor.system.resolveBestLight(lightSourceMap);
 	const lightData = bestLight ? foundry.utils.deepClone(bestLight) : NO_LIGHT;
 
@@ -89,9 +92,20 @@ Hooks.on("updateActor", (actor, changes, _options, _userId) => {
 	syncPartyLight(actor);
 });
 
-// When the party token is first placed on a scene, sync its light
-Hooks.on("createToken", (tokenDoc, _options, _userId) => {
+// When the party token is first placed on a scene, ask about light tracking
+Hooks.on("createToken", async (tokenDoc, _options, _userId) => {
 	const actor = tokenDoc.actor;
 	if (actor?.type !== PARTY_TYPE) return;
-	syncPartyLight(actor);
+
+	const trackLight = await Dialog.confirm({
+		title: game.i18n.localize("PARTY.lightTracking.title"),
+		content: `<p>${game.i18n.localize("PARTY.lightTracking.content")}</p>`,
+		defaultYes: false,
+	});
+
+	await tokenDoc.setFlag(MODULE_ID, "trackLight", trackLight);
+
+	if (trackLight) {
+		syncPartyLight(actor);
+	}
 });

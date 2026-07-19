@@ -50,6 +50,10 @@
     "info": {
       "tokensPlaced": "{count} token(s) placed on the scene.",
       "placeNext": "Choose where to place {name}"
+    },
+    "lightTracking": {
+      "title": "Track Light Sources",
+      "content": "Do you want the party token to track light sources on this map?"
     }
   }
 }
