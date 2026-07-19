@@ -19,7 +19,7 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 
 	/** @inheritdoc */
 	get template() {
-		return "modules/shadowdark-party-token/templates/party-sheet.hbs";
+		return "modules/shadowdark-party-sheet/templates/party-sheet.hbs";
 	}
 
 	/** @inheritdoc */

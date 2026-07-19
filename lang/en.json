@@ -1,7 +1,7 @@
 {
   "TYPES": {
     "Actor": {
-      "shadowdark-party-token": {
+      "shadowdark-party-sheet": {
         "party": "Party"
       }
     }

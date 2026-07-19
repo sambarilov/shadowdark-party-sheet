@@ -1,7 +1,7 @@
 import PartyDataModel from "./data/party-model.mjs";
 import PartySheet from "./sheets/party-sheet.mjs";
 
-const MODULE_ID = "shadowdark-party-token";
+const MODULE_ID = "shadowdark-party-sheet";
 const PARTY_TYPE = `${MODULE_ID}.party`;
 
 /** Cached light source templates from the Shadowdark system. */
