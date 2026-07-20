@@ -15,7 +15,11 @@
       "name": "Party Name",
       "dropHint": "Drag & drop characters or NPCs here to add them to the party.",
       "characters": "Adventurers",
-      "followers": "Followers"
+      "followers": "Followers",
+      "assets": "Assets",
+      "dropCharacterHint": "Drag members here to set as characters",
+      "dropFollowerHint": "Drag members here to set as followers",
+      "dropAssetHint": "Drag members here to set as assets"
     },
     "column": {
       "name": "Name",
@@ -30,8 +34,8 @@
     "inventory": {
       "empty": "No items — add members with gear to see party inventory."
     },
+
     "actions": {
-      "toggleRole": "Toggle Character / Follower",
       "remove": "Remove from Party",
       "placeTokens": "Place on Map",
       "placeFollowers": "Include Followers"

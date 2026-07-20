@@ -39,7 +39,6 @@
     {{!-- Members Tab --}}
     <section class="tab tab-members" data-group="primary" data-tab="tab-members">
 
-      {{#unless isEmpty}}
       <div class="party-toolbar">
         <label class="party-checkbox">
           <input type="checkbox" data-action="toggle-place-followers" />
@@ -49,23 +48,15 @@
           <i class="fas fa-map-marker-alt"></i> {{localize "PARTY.actions.placeTokens"}}
         </button>
       </div>
-      {{/unless}}
-
-      {{#if isEmpty}}
-      <div class="party-empty-hint">
-        <p><i class="fas fa-users"></i> {{localize "PARTY.sheet.dropHint"}}</p>
-      </div>
-      {{/if}}
 
     {{!-- Characters Section --}}
-    {{#if characters.length}}
     <div class="SD-box party-box">
       <div class="header">
         <label><i class="fas fa-shield-alt"></i> {{localize "PARTY.sheet.characters"}}</label>
         <span></span>
       </div>
       <div class="content">
-        <ul class="SD-list">
+        <ul class="SD-list member-list" data-role="character">
           <li class="list-header">
             <span class="member-img-col"></span>
             <span class="item-name">{{localize "PARTY.column.name"}}</span>
@@ -76,7 +67,7 @@
             {{#if editable}}<span class="member-actions"></span>{{/if}}
           </li>
           {{#each characters}}
-          <li data-uuid="{{this.uuid}}" class="{{#if this.missing}}missing{{/if}}">
+          <li data-uuid="{{this.uuid}}" draggable="true" class="{{#if this.missing}}missing{{/if}}">
             {{#if this.missing}}
               <span class="member-img-col"><i class="fas fa-exclamation-triangle"></i></span>
               <span class="item-name">{{this.name}}</span>
@@ -100,26 +91,28 @@
             {{/if}}
             {{#if @root.editable}}
             <span class="member-actions">
-              <a data-action="toggle-role" title="{{localize 'PARTY.actions.toggleRole'}}"><i class="fas fa-exchange-alt"></i></a>
               <a data-action="remove-member" title="{{localize 'PARTY.actions.remove'}}"><i class="fas fa-trash"></i></a>
             </span>
             {{/if}}
           </li>
           {{/each}}
+          {{#unless characters.length}}
+          <li class="member-drop-hint">
+            <span>{{localize "PARTY.sheet.dropCharacterHint"}}</span>
+          </li>
+          {{/unless}}
         </ul>
       </div>
     </div>
-    {{/if}}
 
     {{!-- Followers Section --}}
-    {{#if followers.length}}
     <div class="SD-box party-box">
       <div class="header">
         <label><i class="fas fa-hiking"></i> {{localize "PARTY.sheet.followers"}}</label>
         <span></span>
       </div>
       <div class="content">
-        <ul class="SD-list">
+        <ul class="SD-list member-list" data-role="follower">
           <li class="list-header">
             <span class="member-img-col"></span>
             <span class="item-name">{{localize "PARTY.column.name"}}</span>
@@ -130,7 +123,7 @@
             {{#if editable}}<span class="member-actions"></span>{{/if}}
           </li>
           {{#each followers}}
-          <li data-uuid="{{this.uuid}}" class="{{#if this.missing}}missing{{/if}}">
+          <li data-uuid="{{this.uuid}}" draggable="true" class="{{#if this.missing}}missing{{/if}}">
             {{#if this.missing}}
               <span class="member-img-col"><i class="fas fa-exclamation-triangle"></i></span>
               <span class="item-name">{{this.name}}</span>
@@ -154,16 +147,75 @@
             {{/if}}
             {{#if @root.editable}}
             <span class="member-actions">
-              <a data-action="toggle-role" title="{{localize 'PARTY.actions.toggleRole'}}"><i class="fas fa-exchange-alt"></i></a>
               <a data-action="remove-member" title="{{localize 'PARTY.actions.remove'}}"><i class="fas fa-trash"></i></a>
             </span>
             {{/if}}
           </li>
           {{/each}}
+          {{#unless followers.length}}
+          <li class="member-drop-hint">
+            <span>{{localize "PARTY.sheet.dropFollowerHint"}}</span>
+          </li>
+          {{/unless}}
         </ul>
       </div>
     </div>
-    {{/if}}
+
+    {{!-- Assets Section --}}
+    <div class="SD-box party-box">
+      <div class="header">
+        <label><i class="fas fa-gem"></i> {{localize "PARTY.sheet.assets"}}</label>
+        <span></span>
+      </div>
+      <div class="content">
+        <ul class="SD-list member-list" data-role="asset">
+          <li class="list-header">
+            <span class="member-img-col"></span>
+            <span class="item-name">{{localize "PARTY.column.name"}}</span>
+            <span class="member-field">{{localize "PARTY.column.ancestry"}}</span>
+            <span class="member-field">{{localize "PARTY.column.class"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.level"}}</span>
+            <span class="member-stat">{{localize "PARTY.column.slots"}}</span>
+            {{#if editable}}<span class="member-actions"></span>{{/if}}
+          </li>
+          {{#each assets}}
+          <li data-uuid="{{this.uuid}}" draggable="true" class="{{#if this.missing}}missing{{/if}}">
+            {{#if this.missing}}
+              <span class="member-img-col"><i class="fas fa-exclamation-triangle"></i></span>
+              <span class="item-name">{{this.name}}</span>
+            {{else}}
+              <span class="member-img-col">
+                <img src="{{this.img}}" class="member-img" />
+              </span>
+              <span class="item-name">
+                <a data-action="open-sheet">{{this.name}}</a>
+              </span>
+              <span class="member-field">{{this.ancestry}}</span>
+              <span class="member-field">{{this.className}}</span>
+              <span class="member-stat">{{this.level}}</span>
+              <span class="member-stat">
+                {{#if this.isPlayer}}
+                  {{this.slotsUsed}}/{{this.slotsTotal}}
+                {{else}}
+                  —
+                {{/if}}
+              </span>
+            {{/if}}
+            {{#if @root.editable}}
+            <span class="member-actions">
+              <a data-action="remove-member" title="{{localize 'PARTY.actions.remove'}}"><i class="fas fa-trash"></i></a>
+            </span>
+            {{/if}}
+          </li>
+          {{/each}}
+          {{#unless assets.length}}
+          <li class="member-drop-hint">
+            <span>{{localize "PARTY.sheet.dropAssetHint"}}</span>
+          </li>
+          {{/unless}}
+        </ul>
+      </div>
+    </div>
 
     </section>
 

@@ -8,7 +8,7 @@ export default class PartyDataModel extends foundry.abstract.TypeDataModel {
 					uuid: new fields.DocumentUUIDField({ type: "Actor" }),
 					role: new fields.StringField({
 						initial: "character",
-						choices: ["character", "follower"],
+						choices: ["character", "follower", "asset"],
 					}),
 				})
 			),

@@ -6,7 +6,10 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 			width: 700,
 			height: 550,
 			resizable: true,
-			dragDrop: [{ dropSelector: null }],
+			dragDrop: [
+				{ dropSelector: null },
+				{ dragSelector: ".member-list li[data-uuid]", dropSelector: ".member-list" },
+			],
 			tabs: [
 				{
 					navSelector: ".SD-nav",
@@ -29,7 +32,7 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 
 		context.characters = resolved.filter(m => m.role === "character");
 		context.followers = resolved.filter(m => m.role === "follower");
-		context.isEmpty = resolved.length === 0;
+		context.assets = resolved.filter(m => m.role === "asset");
 		context.editable = this.isEditable;
 
 		// Inventory tab data
@@ -60,10 +63,6 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 			event => this._onRemoveMember(event)
 		);
 
-		html.find("[data-action='toggle-role']").click(
-			event => this._onToggleRole(event)
-		);
-
 		html.find("[data-action='open-sheet']").click(
 			event => this._onOpenSheet(event)
 		);
@@ -71,6 +70,47 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		html.find("[data-action='place-tokens']").click(
 			event => this._onPlaceTokens(event)
 		);
+
+		// Drag-and-drop between character/follower lists
+		html.find(".member-list li[data-uuid]").on("dragstart", event => {
+			event.originalEvent.dataTransfer.setData(
+				"text/plain",
+				JSON.stringify({ type: "member-reorder", uuid: event.currentTarget.dataset.uuid })
+			);
+		});
+
+		html.find(".member-list").on("dragover", event => {
+			event.preventDefault();
+			event.currentTarget.classList.add("drag-over");
+		});
+
+		html.find(".member-list").on("dragleave", event => {
+			event.currentTarget.classList.remove("drag-over");
+		});
+
+		html.find(".member-list").on("drop", async event => {
+			event.preventDefault();
+			event.currentTarget.classList.remove("drag-over");
+
+			let data;
+			try {
+				data = JSON.parse(event.originalEvent.dataTransfer.getData("text/plain"));
+			} catch { return; }
+
+			if (data.type !== "member-reorder") return;
+
+			const targetRole = event.currentTarget.dataset.role;
+			if (!targetRole) return;
+
+			const members = this.actor.system.members.map(m => {
+				if (m.uuid === data.uuid) {
+					return { uuid: m.uuid, role: targetRole };
+				}
+				return { uuid: m.uuid, role: m.role };
+			});
+
+			await this.actor.update({ "system.members": members });
+		});
 	}
 
 	/** @inheritdoc */
@@ -116,27 +156,6 @@ export default class PartySheet extends foundry.appv1.sheets.ActorSheet {
 		const members = this.actor.system.members
 			.filter(m => m.uuid !== uuid)
 			.map(m => ({ uuid: m.uuid, role: m.role }));
-
-		await this.actor.update({ "system.members": members });
-	}
-
-	/**
-	 * Toggle a member between character and follower.
-	 * @param {Event} event
-	 */
-	async _onToggleRole(event) {
-		event.preventDefault();
-		const uuid = event.currentTarget.closest("[data-uuid]").dataset.uuid;
-
-		const members = this.actor.system.members.map(m => {
-			if (m.uuid === uuid) {
-				return {
-					uuid: m.uuid,
-					role: m.role === "character" ? "follower" : "character",
-				};
-			}
-			return { uuid: m.uuid, role: m.role };
-		});
 
 		await this.actor.update({ "system.members": members });
 	}

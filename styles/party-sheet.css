@@ -193,3 +193,30 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ---------------------------------------- */
+/*  Drag & Drop                              */
+/* ---------------------------------------- */
+
+.shadowdark.sheet.party .member-list li[data-uuid] {
+  cursor: grab;
+}
+
+.shadowdark.sheet.party .member-list li[data-uuid]:active {
+  cursor: grabbing;
+  opacity: 0.5;
+}
+
+.shadowdark.sheet.party .member-list.drag-over {
+  background: rgba(0, 100, 200, 0.08);
+  border-radius: 4px;
+  outline: 2px dashed rgba(0, 100, 200, 0.3);
+}
+
+.shadowdark.sheet.party .member-drop-hint {
+  color: #999;
+  font-style: italic;
+  font-size: 12px;
+  text-align: center;
+  padding: 6px 0;
+}
